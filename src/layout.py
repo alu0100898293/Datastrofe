@@ -48,11 +48,11 @@ def views(link):
             st.sidebar.subheader("Selección de gráfico")
             chart_type = st.sidebar.selectbox(label="Seleccione el tipo de gráfico.",
                                               options=['Grafico de dispersion', 'Grafico por sectores',
-                                                        'Histograma']) #'Grafico de lineas'
+                                                        'Histograma', 'Grafico de lineas', 'Grafico de barras'])
                                                        #'Density contour',
                                                        #'Sunburst','Pie Charts','Density heatmaps',
                                                        #'Histogram', 'Box plots','Tree maps',
-                                                       #'Violin plots', ])  # 'Line plots',
+                                                       #'Violin plots', ])
 
             graph_controls(chart_type=chart_type, df=df, dropdown_options=columns, template=theme_selection)
 
