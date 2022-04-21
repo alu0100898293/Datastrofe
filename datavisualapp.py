@@ -6,6 +6,6 @@ from src.layout import views
 st.server.server_util.MESSAGE_SIZE_LIMIT = 300 * 1e6
 
 # navigation links
-link = st.sidebar.radio(label='Links', options=['Visualizacion', 'Referencias'])
+link = st.sidebar.radio(label='Páginas', options=['Visualizacion', 'Referencias'])
 views(link)
 
