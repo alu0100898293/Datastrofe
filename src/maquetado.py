@@ -59,6 +59,8 @@ def vistas(link):
     if link == 'Referencias':
         st.header('Referencias')
         st.write("Este entorno está basado en el proyecto Open Source OpenCharts.")
+        st.subheader('Repositorio de la aplicación')
+        st.write("El código de esta aplicación puede consultarse en el repositorio: https://github.com/alu0100898293/ADM-Visualizacion")
         st.subheader('Tutorial de desarrollo')
         st.write("Para el desarrollo de este entorno se han llevado a cabo las indicaciones marcadas por los vídeos del usuario de Youtube" 
             "The Fullstack Ninja en la colección https://www.youtube.com/playlist?list=PLgf5tk2HvlhONM16aLWjhdJPxRptglWdW")
