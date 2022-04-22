@@ -1,9 +1,9 @@
 import streamlit as st
-from src.graph_controls import graph_controls
-from src.utility import load_dataframe
+from src.control_graficos import control_graficos
+from src.carga_datos import load_dataframe
 from streamlit.components.v1 import iframe
 
-def views(link):
+def vistas(link):
     """
     Función de redirección entre páginas
     :param link: str, opción seleccionada en el radio button
@@ -54,7 +54,7 @@ def views(link):
                                                        #'Histogram', 'Box plots','Tree maps',
                                                        #'Violin plots', ])
 
-            graph_controls(chart_type=chart_type, df=df, dropdown_options=columns, template=theme_selection)
+            control_graficos(chart_type=chart_type, df=df, dropdown_options=columns, template=theme_selection)
 
     if link == 'Referencias':
         st.header('Referencias')

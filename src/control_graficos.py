@@ -1,9 +1,9 @@
 import streamlit as st
 import plotly.express as px
-from src.image_export import show_export_format
+from src.exportar_imagen import mostrar_formato_exportacion
 
 
-def graph_controls(chart_type, df, dropdown_options, template):
+def control_graficos(chart_type, df, dropdown_options, template):
     """
     Función que muestra los diferentes parámetros aceptados según el tipo de gráfico elegido
     :param chart_type: str, nombre del gráfico
@@ -307,5 +307,5 @@ def graph_controls(chart_type, df, dropdown_options, template):
 
     st.subheader("Gráfico")
     st.plotly_chart(plot)
-    show_export_format(plot)
+    mostrar_formato_exportacion(plot)
 

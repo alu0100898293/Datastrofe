@@ -4,7 +4,7 @@ import streamlit as st
 
 
 @st.cache
-def download_chart(plot, output_format):
+def descargar_grafica(plot, output_format):
     """
 
     :param plot: gráfico a exportar
@@ -55,12 +55,12 @@ def download_chart(plot, output_format):
     return href
 
 
-def show_export_format(plot):
+def mostrar_formato_exportacion(plot):
     try:
         st.subheader('Exportar imagen')
         output_format = st.selectbox(label='Seleccione formato de descarga', options=['.png', '.jpeg', '.pdf', '.svg',
                                                                               '.html', '.json'])
-        href = download_chart(plot, output_format=output_format)
+        href = descargar_grafica(plot, output_format=output_format)
         st.markdown(href, unsafe_allow_html=True)
     except Exception as e:
         print(e)
