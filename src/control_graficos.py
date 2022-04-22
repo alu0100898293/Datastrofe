@@ -26,14 +26,6 @@ def control_graficos(chart_type, df, dropdown_options, template):
             color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
             symbol_value = st.sidebar.selectbox("Símbolo",index=length_of_options, options=dropdown_options)
             size_value = st.sidebar.selectbox("Tamaño", index=length_of_options,options=dropdown_options)
-            hover_name_value = st.sidebar.selectbox("Nombre superpuesto", index=length_of_options,options=dropdown_options)
-            facet_row_value = st.sidebar.selectbox("Faceta de línea",index=length_of_options, options=dropdown_options,)
-            facet_column_value = st.sidebar.selectbox("Faceta de columna", index=length_of_options,
-                                                      options=dropdown_options)
-            marginalx = st.sidebar.selectbox("X marginal", index=2,options=['rug', 'box', None,
-                                                                         'violin', 'histogram'])
-            marginaly = st.sidebar.selectbox("Y marginal", index=2,options=['rug', 'box', None,
-                                                                         'violin', 'histogram'])
             log_x = st.sidebar.selectbox('Nombre en eje x', options=[True, False])
             log_y = st.sidebar.selectbox('Nombre en eje y', options=[True, False])
             title = st.sidebar.text_input(label='Título de gráfico')
@@ -43,10 +35,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
                               color=color_value,
                               symbol=symbol_value,
                               size=size_value,
-                              hover_name=hover_name_value,
-                              facet_row=facet_row_value,
-                              facet_col=facet_column_value,
-                              log_x=log_x, log_y=log_y,marginal_y=marginaly, marginal_x=marginalx,
+                              log_x=log_x, log_y=log_y,
                               template=template, title=title)
 
         except Exception as e:
@@ -69,10 +58,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
                                              options=['count','sum', 'avg', 'min', 'max'])
             histnorm = st.sidebar.selectbox('Norma de histograma', options=[None, 'percent', 'probability', 'density',
                                                                   'probability density'], index=0)
-            hover_name_value = st.sidebar.selectbox("Nombre superpuesto", index=length_of_options,options=dropdown_options)
-            facet_row_value = st.sidebar.selectbox("Faceta de línea",index=length_of_options, options=dropdown_options,)
-            facet_column_value = st.sidebar.selectbox("Faceta de columna", index=length_of_options,
-                                                      options=dropdown_options)
+
             cummulative = st.sidebar.selectbox('Acumulativo', options=[False, True])
             log_x = st.sidebar.selectbox('Nombre en eje x', options=[True, False])
             log_y = st.sidebar.selectbox('Nombre en eje y', options=[True, False])
@@ -80,10 +66,10 @@ def control_graficos(chart_type, df, dropdown_options, template):
             plot = px.histogram(data_frame=df,barmode=barmode,histnorm=histnorm,
                                 marginal=marginal,barnorm=barnorm,histfunc=hist_func,
                                 x=x_values,y=y_values,cumulative=cummulative,
-                                color=color_value,hover_name=hover_name_value,
-                                facet_row=facet_row_value,nbins=nbins,
-                                facet_col=facet_column_value,log_x=log_x,
-                                log_y=log_y,template=template, title=title)
+                                color=color_value,
+                                nbins=nbins,
+                                log_x=log_x,log_y=log_y,
+                                template=template, title=title)
 
         except Exception as e:
             print(e)
@@ -111,23 +97,16 @@ def control_graficos(chart_type, df, dropdown_options, template):
             x_values = st.sidebar.selectbox('X axis', index=length_of_options, options=dropdown_options)
             y_values = st.sidebar.selectbox('Y axis', options=dropdown_options)
             color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
-            line_group = st.sidebar.selectbox("Line group", options=dropdown_options)
-            line_dash = st.sidebar.selectbox("Line dash", index=length_of_options,options=dropdown_options)
-            hover_name_value = st.sidebar.selectbox("Hover name", index=length_of_options, options=dropdown_options)
-            facet_row_value = st.sidebar.selectbox("Facet row", index=length_of_options, options=dropdown_options, )
-            facet_column_value = st.sidebar.selectbox("Facet column", index=length_of_options,
-                                                      options=dropdown_options)
+            #line_group = st.sidebar.selectbox("Line group", options=dropdown_options)
+            #line_dash = st.sidebar.selectbox("Line dash", index=length_of_options,options=dropdown_options)
             log_x = st.sidebar.selectbox('Log axis on x', options=[True, False])
             log_y = st.sidebar.selectbox('Log axis on y', options=[True, False])
             title = st.sidebar.text_input(label='Title of chart')
             plot = px.line(data_frame=df,
-                           line_group=line_group,
-                           line_dash=line_dash,
+                           #line_group=line_group,
+                           #line_dash=line_dash,
                            x=x_values,y=y_values,
                            color=color_value,
-                           hover_name=hover_name_value,
-                           facet_row=facet_row_value,
-                           facet_col=facet_column_value,
                            log_x=log_x,
                            log_y=log_y,
                            template=template,
