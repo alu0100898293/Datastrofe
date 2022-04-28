@@ -6,3 +6,6 @@
 3) Puede ser necesario añadir a PATH la ruta donde se instalaron los requerimientos <br> ```PATH=$PATH:~/.local/bin/``` <br>
 4) Ejecución del servidor con <br> ```streamlit run app_visualizacion.py```
 
+## Entorno desplegado
+Puede probar el entorno de forma online mediante Streamlit en el siguiente enlace:
+https://share.streamlit.io/alu0100898293/adm-visualizacion/main/app_visualizacion.py
