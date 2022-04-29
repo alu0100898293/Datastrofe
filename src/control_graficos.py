@@ -25,6 +25,8 @@ def control_graficos(chart_type, df, dropdown_options, template):
             y_values = st.sidebar.selectbox('Eje Y',index=length_of_options, options=dropdown_options)
             color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
             symbol_value = st.sidebar.selectbox("Símbolo",index=length_of_options, options=dropdown_options)
+            marginaly = st.sidebar.selectbox("Gráfico marginal", index=0,options=[ None, 'box',
+                                                                         'violin', 'histogram'])
             log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
             log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             title = st.sidebar.text_input(label='Título de gráfico')
@@ -33,7 +35,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
                               y=y_values,
                               color=color_value,
                               symbol=symbol_value,
-                              log_x=log_x, log_y=log_y,
+                              marginal_y=marginaly, log_x=log_x, log_y=log_y,
                               template=template, title=title)
 
         except Exception as e:
@@ -103,6 +105,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
             y_values = st.sidebar.selectbox('Ejec Y', index=length_of_options, options=dropdown_options)
             color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
             hover_name_value = st.sidebar.selectbox("Nombre superpuesto", index=length_of_options, options=dropdown_options)
+            barmode = st.sidebar.selectbox('Modo de barra', options=['stack', 'group', 'overlay','relative'], index=3)
             title = st.sidebar.text_input(label='Título del gráfico')
 
             plot = px.bar(data_frame=df, 
@@ -110,6 +113,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
                             color=color_value, 
                             template=template,
                             hover_name=hover_name_value, 
+                            barmode=barmode,
                             title=title)
 
         except Exception as e:
