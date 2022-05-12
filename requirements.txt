@@ -5,3 +5,5 @@ kaleido
 psutil
 pandas
 openpyxl>=3.0.9
+pandas-profiling
+streamlit-pandas-profiling

@@ -6,6 +6,6 @@ from src.maquetado import vistas
 st.server.server_util.MESSAGE_SIZE_LIMIT = 300 * 1e6
 
 # navigation links
-link = st.sidebar.radio(label='Páginas', options=['Visualizacion', 'Referencias'])
+link = st.sidebar.radio(label='Páginas', options=['Visualizacion', 'Informe', 'Referencias'])
 vistas(link)
 
