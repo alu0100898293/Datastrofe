@@ -46,12 +46,18 @@ def control_graficos(chart_type, df, dropdown_options, template):
 
         try:
             x_values = st.sidebar.selectbox('Eje X', index=length_of_options,options=dropdown_options)
+            y_values = st.sidebar.selectbox('Eje y',index=length_of_options, options=dropdown_options)
+            nbins = st.sidebar.number_input(label='Número de contenedores', min_value=2, value=5)
             color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
 
+            hist_func = st.sidebar.selectbox('Función de agregación del histograma', index=0,
+                                             options=['count','sum', 'avg', 'min', 'max'])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.histogram(data_frame=df,
-                                x=x_values,
+                                x=x_values, y=y_values,
+                                nbins=nbins,
                                 color=color_value,
+                                histfunc=hist_func,
                                 template=template, title=title)
 
         except Exception as e:
@@ -119,61 +125,51 @@ def control_graficos(chart_type, df, dropdown_options, template):
         except Exception as e:
             print(e)
     
-    #if chart_type == 'Violin plots':
-    #    st.sidebar.subheader('Violin plot Settings')
-    #
-    #    try:
-    #        x_values = st.sidebar.selectbox('X axis', index=length_of_options,options=dropdown_options)
-    #        y_values = st.sidebar.selectbox('Y axis',index=length_of_options, options=dropdown_options)
-    #        color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
-    #        violinmode = st.sidebar.selectbox('Violin mode', options=['group', 'overlay'])
-    #        box = st.sidebar.selectbox("Show box", options=[False, True])
-    #        outliers = st.sidebar.selectbox('Show points', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-    #        hover_name_value = st.sidebar.selectbox("Hover name", index=length_of_options,options=dropdown_options)
-    #        facet_row_value = st.sidebar.selectbox("Facet row",index=length_of_options, options=dropdown_options,)
-    #        facet_column_value = st.sidebar.selectbox("Facet column", index=length_of_options,
-    #                                                  options=dropdown_options)
-    #        log_x = st.sidebar.selectbox('Log axis on x', options=[True, False])
-    #        log_y = st.sidebar.selectbox('Log axis on y', options=[True, False])
-    #        title = st.sidebar.text_input(label='Title of chart')
-    #        plot = px.violin(data_frame=df,x=x_values,
-    #                         y=y_values,color=color_value,
-    #                         hover_name=hover_name_value,
-    #                         facet_row=facet_row_value,
-    #                         facet_col=facet_column_value,box=box,
-    #                         log_x=log_x, log_y=log_y,violinmode=violinmode,points=outliers,
-    #                         template=template, title=title)
-    #
-    #    except Exception as e:
-    #        print(e)
-    #
-    #if chart_type == 'Box plots':
-    #    st.sidebar.subheader('Box plot Settings')
-    #
-    #    try:
-    #        x_values = st.sidebar.selectbox('X axis', index=length_of_options, options=dropdown_options)
-    #        y_values = st.sidebar.selectbox('Y axis', index=length_of_options, options=dropdown_options)
-    #        color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
-    #        boxmode = st.sidebar.selectbox('Violin mode', options=['group', 'overlay'])
-    #        outliers = st.sidebar.selectbox('Show outliers', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-    #        hover_name_value = st.sidebar.selectbox("Hover name", index=length_of_options, options=dropdown_options)
-    #        facet_row_value = st.sidebar.selectbox("Facet row", index=length_of_options, options=dropdown_options, )
-    #        facet_column_value = st.sidebar.selectbox("Facet column", index=length_of_options,
-    #                                                  options=dropdown_options)
-    #        log_x = st.sidebar.selectbox('Log axis on x', options=[True, False])
-    #        log_y = st.sidebar.selectbox('Log axis on y', options=[True, False])
-    #        notched = st.sidebar.selectbox('Notched', options=[True, False])
-    #        title = st.sidebar.text_input(label='Title of chart')
-    #        plot = px.box(data_frame=df, x=x_values,
-    #                      y=y_values, color=color_value,
-    #                      hover_name=hover_name_value,facet_row=facet_row_value,
-    #                      facet_col=facet_column_value, notched=notched,
-    #                      log_x=log_x, log_y=log_y, boxmode=boxmode, points=outliers,
-    #                      template=template, title=title)
-    #
-    #    except Exception as e:
-    #        print(e)
-    #
+    if chart_type == 'Grafico de violin':
+        st.sidebar.subheader('Gráfico de Violín')
+    
+        try:
+            x_values = st.sidebar.selectbox('Eje x', index=length_of_options,options=dropdown_options)
+            y_values = st.sidebar.selectbox('Eje y',index=length_of_options, options=dropdown_options)
+            color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
+            violinmode = st.sidebar.selectbox('Modo de violín', options=['group', 'overlay'])
+            box = st.sidebar.selectbox("Mostrar caja", options=[False, True])
+            outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
+            log_x = st.sidebar.selectbox('Escala log. en x', options=[True, False])
+            log_y = st.sidebar.selectbox('Escala log. en y', options=[True, False])
+            title = st.sidebar.text_input(label='Título del gráfico')
+            plot = px.violin(data_frame=df,x=x_values,
+                             y=y_values,color=color_value,
+                             box=box,
+                             log_x=log_x, log_y=log_y,
+                             violinmode=violinmode,points=outliers,
+                             template=template, title=title)
+    
+        except Exception as e:
+            print(e)
+    
+    if chart_type == 'Grafico de cajas':
+        st.sidebar.subheader('Gráfico de cajas')
+    
+        try:
+            x_values = st.sidebar.selectbox('Eje x', index=length_of_options, options=dropdown_options)
+            y_values = st.sidebar.selectbox('Eje y', index=length_of_options, options=dropdown_options)
+            color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
+            boxmode = st.sidebar.selectbox('Modo de caja', options=['group', 'overlay'])
+            outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
+            log_x = st.sidebar.selectbox('Escala log. en x', options=[True, False])
+            log_y = st.sidebar.selectbox('Escala log. en y', options=[True, False])
+            notched = st.sidebar.selectbox('Mostrar muescas', options=[True, False])
+            title = st.sidebar.text_input(label='Título del gráfico')
+            plot = px.box(data_frame=df, x=x_values,
+                          y=y_values, color=color_value,
+                          notched=notched,
+                          log_x=log_x, log_y=log_y, boxmode=boxmode, points=outliers,
+                          template=template, title=title)
+    
+        except Exception as e:
+            print(e)
+    
     #if chart_type == 'Sunburst':
     #    st.sidebar.subheader('Sunburst Settings')
     #
