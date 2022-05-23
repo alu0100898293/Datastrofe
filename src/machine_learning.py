@@ -1,27 +1,17 @@
 from numpy.core.numeric import True_
 import streamlit as st
-import numpy as np
 import pandas as pd
-from bokeh.io import output_file
-from bokeh.models import Panel, Tabs
-from bokeh.plotting import figure
-from bokeh.palettes import Set3
 import matplotlib.pyplot as plot
 
-from sklearn import metrics
-from sklearn.svm import SVC
+##sklearn
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
-from sklearn.metrics import ConfusionMatrixDisplay, PrecisionRecallDisplay
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import precision_score, recall_score
-##sklearn
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, accuracy_score
@@ -172,80 +162,3 @@ def ml_selector(df):
         model, X_train, X_test, result, result_train = predict_classification(X, y, seed, type, chosen_classifier, parameter)
         get_metrics(type, result, result_train)
         plot_metrics(model, X_test, X_train, result, result_train, type)
-    
-
-
-    ##############################
-    #ml_type=st.sidebar.selectbox('Tipo de apredizaje:',('Supervisado', 'No supervisado'))
-
-    #if ml_type == 'Supervisado':
-    #    features=st.sidebar.multiselect("Seleccione las características a incluir en el modelo. "
-    #                                "Se empleará como predictora la última seleccionada",df.columns)
-    #    df1=df[features] 
-    #    if df1 is not None:  
-    #        x=df1.iloc[:,0:-1]
-    #        y=df1.iloc[:,-1]
-    #        modelo_supervisado(x,y,seed)
-    #    
-    #if ml_type == 'No_supervisado':
-    #    st.subheader("In progress")
-    #    features=st.sidebar.multiselect("Seleccione las características a incluir en el modelo.",df.columns)
-
-
-    #new_data=st.sidebar.multiselect("Select your preferred columns. NB: Let your target variable be the last column to be selected",df.columns)
-    #df1=df[new_data]
-    #st.dataframe(df1)
-
-
-    ##Dividing my data into x and y variables
-
-    #x=df1.iloc[:,0:-1]
-    #y=df1.iloc[:,-1]
-
-
-
-    
-
-def control_clasificador(classifier, x_train, x_test, y_train, y_test):
-    """
-    Función que muestra los diferentes parámetros aceptados según el tipo de gráfico elegido
-    :param classifier: str, tipo de clasificador
-    :param df: set de datos importado
-    :param dropdown_options: lista con los nombres de las columnas
-    :return:
-    """
-
-    def plot_metrics(metrics_list):
-        if "Confusion Matrix" in metrics_list:
-            st.subheader("Confusion Matrix")
-            plot_confusion_matrix(model, x_test, y_test, display_labels=class_names)
-            st.pyplot()
-        if "ROC Curve" in metrics_list:
-            st.subheader("ROC Curve")
-            plot_roc_curve(model, x_test, y_test)
-            st.pyplot()
-        if "Precision-Recall Curve" in metrics_list:
-            st.subheader("Precision-Recall Curve")
-            plot_precision_recall_curve(model, x_test, y_test)
-            st.pyplot()
-    class_names = ["edible", "poisnous"]
-
-    if classifier == 'Random Forest':
-        st.sidebar.subheader('Random Forest')
-        st.sidebar.subheader("Hyperparameters")
-        n_estimators= st.sidebar.number_input("The number of trees in the forest", 100, 5000, step=10, key="n_estimators")
-        max_depth = st.sidebar.number_input("The maximum depth of tree", 1, 20, step =1, key="max_depth")
-        bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ("True", "False"), key="bootstrap")
-        
-        metrics = st.sidebar.multiselect("What metrics to plot?", ("Confusion Matrix", "ROC Curve", "Precision-Recall Curve"))
-        
-        if st.sidebar.button("Clasificar", key="classify"):
-            st.subheader("Random Forest Results")
-            model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, bootstrap= bootstrap, n_jobs=-1 )
-            model.fit(x_train, y_train)
-            accuracy = model.score(x_test, y_test)
-            y_pred = model.predict(x_test)
-            st.write("Accuracy: ", accuracy.round(2))
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
-            plot_metrics(metrics)

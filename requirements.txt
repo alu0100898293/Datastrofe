@@ -9,5 +9,3 @@ pandas-profiling
 streamlit-pandas-profiling
 numpy
 scikit-learn
-pillow>=7.1.0
-bokeh==2.4.1
