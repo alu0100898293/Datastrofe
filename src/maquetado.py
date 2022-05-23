@@ -1,8 +1,12 @@
 import streamlit as st
+from src.AED import analisis_exploratorio
 from src.control_graficos import control_graficos
-from src.carga_datos import load_dataframe
+from src.carga_datos import load_dataframe, split
 from src.informe import mostrar_informe
+from src.machine_learning import control_clasificador, ml_selector
 from streamlit.components.v1 import iframe
+from src.machine_learning_v1 import ML
+from pandas.errors import ParserError
 
 def vistas(link):
     """
@@ -10,7 +14,8 @@ def vistas(link):
     :param link: str, opción seleccionada en el radio button
     :return:
     """
-    if link == 'Referencias':
+    if link == 'Inicio':
+        st.header('Bienvenidos al maravilloso mundo del anáilisis de datos')
         st.header('Referencias')
         st.write("Este entorno está basado en el proyecto Open Source OpenCharts.")
         st.subheader('Repositorio de la aplicación')
@@ -25,9 +30,10 @@ def vistas(link):
         st.subheader("Inicio rápido")
         st.markdown("Para comenzar con los análisis de datos, el primer paso es "
                     "cargar el conjunto de datos que vamos a estudiar. "
-                    "Así que importa los datos y elige la función que quieras emplear. "
-                    "Si marca la casilla de limpiar datos, se borrarán las filas duplciadas y "
-                    "aquellas en las que falten valores.")
+                    "Así que importa los datos y elige la función que quieras emplear. ")
+        st.markdown("__Atención__:Si marca la casilla de limpiar datos, se borrarán tanto las filas duplicadas "
+                    " como aquellas en las que falten valores, y se eliminarán los outliers.")
+
 
         st.sidebar.subheader('Opciones')
 
@@ -40,19 +46,12 @@ def vistas(link):
 
         if uploaded_file is not None:
             df, columns = load_dataframe(uploaded_file=uploaded_file, clean_data=clean_data)
-
-            st.sidebar.subheader("Mostrar el dataset")
-
-            show_data = st.sidebar.checkbox(label='Mostrar datos')
-
-            if show_data:
-                try:
-                    st.subheader("Dataset importado")
-                    number_of_rows = st.sidebar.number_input(label='Seleccione el número de filas', min_value=2)
-
-                    st.dataframe(df.head(number_of_rows))
-                except Exception as e:
-                    print(e)
+            
+            if link == 'AED':
+                st.subheader("Bienvenido al entorno de Análisis Exploratorio de los Datos")
+                st.markdown("Elija en el menú los parámetros a mostrar y comience con el análisis "
+                            "de dataset.")
+                analisis_exploratorio(df)
 
             if link == 'Visualizacion':
                 st.subheader("Bienvenido al entorno de visualización")
@@ -84,4 +83,38 @@ def vistas(link):
                             "Datasets de gran tamaño debido a la excesiva duración del proceso.")
 
                 mostrar_informe(df=df) 
+
+            if link == 'Machine Learning':
+                st.subheader("Bienvenido al entorno de Machine Learning")
+                ml_selector(df)
+                #controller = ML()
+                #try:
+                #    controller.data = df
+
+                #    if controller.data is not None:
+                #        split_data = st.sidebar.slider('Randomly reduce data size %', 1, 100, 10 )
+                #        train_test = st.sidebar.slider('Train-test split %', 1, 99, 66 )
+                #    controller.set_features()
+                #    if len(controller.features) > 1:
+                #        controller.prepare_data(split_data, train_test)
+                #        controller.set_classifier_properties()
+                #        predict_btn = st.sidebar.button('Predict')  
+                #except (AttributeError, ParserError, KeyError) as e:
+                #    st.markdown('<span style="color:blue">WRONG FILE TYPE</span>', unsafe_allow_html=True)  
+
+
+                #if controller.data is not None and len(controller.features) > 1:
+                #    if predict_btn:
+                #        st.sidebar.text("Progress:")
+                #        my_bar = st.sidebar.progress(0)
+                #        predictions, predictions_train, result, result_train = controller.predict(predict_btn)
+                #        for percent_complete in range(100):
+                #            my_bar.progress(percent_complete + 1)
+                #        
+                #        controller.get_metrics()        
+                #        controller.plot_result()
+                #        controller.print_table()
+
+                
+
     

@@ -135,8 +135,8 @@ def control_graficos(chart_type, df, dropdown_options, template):
             violinmode = st.sidebar.selectbox('Modo de violín', options=['group', 'overlay'])
             box = st.sidebar.selectbox("Mostrar caja", options=[False, True])
             outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[True, False])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[True, False])
+            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.violin(data_frame=df,x=x_values,
                              y=y_values,color=color_value,
@@ -157,9 +157,9 @@ def control_graficos(chart_type, df, dropdown_options, template):
             color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
             boxmode = st.sidebar.selectbox('Modo de caja', options=['group', 'overlay'])
             outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[True, False])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[True, False])
-            notched = st.sidebar.selectbox('Mostrar muescas', options=[True, False])
+            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
+            notched = st.sidebar.selectbox('Mostrar muescas', options=[False, True])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.box(data_frame=df, x=x_values,
                           y=y_values, color=color_value,
