@@ -21,15 +21,20 @@ def vistas(link):
         st.markdown("Adéntrate en el maravilloso mundo del anáilisis de datos con "
                     "nuestro entorno gracias a sus mecánicas de visualización y aprendizaje "
                     "automático. Emplea las vistas del menú lateral para empezar. ")
+
+        st.subheader("Datasets recomendado")
+        st.markdown("A modo de recomendación, puedes descargar el Dataset de _Star Classification_ en el "
+                    "siguiente [enlace](https://drive.google.com/file/d/1jQHUQAZc002zDfbQXtD-X9VHdJ5cNbpo/view?usp=sharing)")
+
         st.header('Referencias')
         st.write("Este entorno está basado en el proyecto Open Source OpenCharts.")
-        st.subheader('Repositorio de la aplicación')
-        st.write("El código de esta aplicación puede consultarse en el repositorio: https://github.com/alu0100898293/ADM-Visualizacion")
-        st.subheader('Tutorial de desarrollo')
-        st.write("Para el desarrollo de este entorno se han llevado a cabo las indicaciones marcadas por los vídeos del usuario de Youtube" 
-            "The Fullstack Ninja en la colección https://www.youtube.com/playlist?list=PLgf5tk2HvlhONM16aLWjhdJPxRptglWdW")
-        st.subheader('Repositorio de OpenCharts')
-        st.write("Puede consultar el repositorio del proyecto OpenCharts en el repositorio https://github.com/bodealamu/opencharts")
+        st.markdown('#### Repositorio de la aplicación')
+        st.markdown("El código de esta aplicación puede consultarse en el repositorio: https://github.com/alu0100898293/ADM-Visualizacion")
+        st.markdown('#### Tutorial de desarrollo')
+        st.markdown("Para el desarrollo de este entorno se han llevado a cabo las indicaciones marcadas por los vídeos del usuario de Youtube" 
+            "The Fullstack Ninja en la colección: https://www.youtube.com/playlist?list=PLgf5tk2HvlhONM16aLWjhdJPxRptglWdW")
+        st.markdown('#### Repositorio de OpenCharts')
+        st.markdown("Puede consultar el repositorio del proyecto OpenCharts en el repositorio: https://github.com/bodealamu/opencharts")
     else:    
         st.subheader("Inicio rápido")
         st.markdown("Para comenzar con los análisis de datos, el primer paso es "
@@ -46,14 +51,6 @@ def vistas(link):
         uploaded_file = st.sidebar.file_uploader(label="Importe aquí el archivo csv o excel.",
                                                 accept_multiple_files=False,
                                                 type=['csv', 'xlsx'])
-
-        st.subheader("Datasets predefinidos")
-        st.markdown("Si lo prefieres, puedes emplear unos de los siguientes Datasets")
-        col1, col2 = st.columns(2)
-        if col1.button('Cargar iris'):  
-            st.download_button('Download CSV', text_contents, 'data/iris.csv')
-        if col2.button('Cargar Stellar clasification'):
-            load_dataframe(uploaded_file="data/star_classification.csv", clean_data=clean_data)
 
         if uploaded_file is not None:
             df, columns = load_dataframe(uploaded_file=uploaded_file, clean_data=clean_data)
