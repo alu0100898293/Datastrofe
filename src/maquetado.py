@@ -5,7 +5,8 @@ from src.carga_datos import load_dataframe
 from src.informe import mostrar_informe
 from src.machine_learning import ml_selector
 from streamlit.components.v1 import iframe
-
+from PIL import Image
+from pathlib import Path
 
 def vistas(link):
     """
@@ -13,8 +14,13 @@ def vistas(link):
     :param link: str, opción seleccionada en el radio button
     :return:
     """
+    image = Image.open('logo.png')
+    st.image(image)
     if link == 'Inicio':
         st.header('Bienvenidos al maravilloso mundo del anáilisis de datos')
+        st.markdown("Adéntrate en el maravilloso mundo del anáilisis de datos con "
+                    "nuestro entorno gracias a sus mecánicas de visualización y aprendizaje "
+                    "automático. Emplea las vistas del menú lateral para empezar. ")
         st.header('Referencias')
         st.write("Este entorno está basado en el proyecto Open Source OpenCharts.")
         st.subheader('Repositorio de la aplicación')
@@ -25,14 +31,12 @@ def vistas(link):
         st.subheader('Repositorio de OpenCharts')
         st.write("Puede consultar el repositorio del proyecto OpenCharts en el repositorio https://github.com/bodealamu/opencharts")
     else:    
-        st.header("Bienvenido al maravilloso mundo del Análisis de Datos")
         st.subheader("Inicio rápido")
         st.markdown("Para comenzar con los análisis de datos, el primer paso es "
                     "cargar el conjunto de datos que vamos a estudiar. "
                     "Así que importa los datos y elige la función que quieras emplear. ")
         st.markdown("__Atención__:Si marca la casilla de limpiar datos, se borrarán tanto las filas duplicadas "
                     " como aquellas en las que falten valores, y se eliminarán los outliers.")
-
 
         st.sidebar.subheader('Opciones')
 
@@ -42,6 +46,14 @@ def vistas(link):
         uploaded_file = st.sidebar.file_uploader(label="Importe aquí el archivo csv o excel.",
                                                 accept_multiple_files=False,
                                                 type=['csv', 'xlsx'])
+
+        st.subheader("Datasets predefinidos")
+        st.markdown("Si lo prefieres, puedes emplear unos de los siguientes Datasets")
+        col1, col2 = st.columns(2)
+        if col1.button('Cargar iris'):  
+            st.download_button('Download CSV', text_contents, 'data/iris.csv')
+        if col2.button('Cargar Stellar clasification'):
+            load_dataframe(uploaded_file="data/star_classification.csv", clean_data=clean_data)
 
         if uploaded_file is not None:
             df, columns = load_dataframe(uploaded_file=uploaded_file, clean_data=clean_data)

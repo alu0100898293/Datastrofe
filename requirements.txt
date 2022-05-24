@@ -1,5 +1,5 @@
 streamlit
-plotly==4.14.3
+plotly==5.2.1
 xlrd
 kaleido
 psutil
@@ -9,3 +9,4 @@ pandas-profiling
 streamlit-pandas-profiling
 numpy
 scikit-learn
+statsmodels 

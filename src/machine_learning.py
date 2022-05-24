@@ -1,7 +1,9 @@
 from numpy.core.numeric import True_
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 
 ##sklearn
 from sklearn.linear_model import LogisticRegression
@@ -15,6 +17,8 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.cluster import KMeans
+from sklearn.tree import plot_tree
 
 def ml_selector(df):
 
@@ -49,6 +53,9 @@ def ml_selector(df):
                 parameter = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
         
         elif type == "Clustering":
+            chosen_classifier = st.sidebar.selectbox("Escoja un clasificador", ('K-means', 'K-means'))
+            if chosen_classifier == 'K-means': 
+                parameter = st.sidebar.slider('Número de clusters', 2, 10, 3)
             pass
         
         return type, chosen_classifier, parameter
@@ -73,8 +80,6 @@ def ml_selector(df):
                 predictions = alg.predict(X_test)
                 predictions_train = alg.predict(X_train)
                 predictions = predictions
-                st.markdown('#### Ecuación obtenida: ' + str(alg.coef_) +
-            'x + ' + str(alg.intercept_))
 
         elif type == "Clasificación":
             if chosen_classifier == 'Logistic Regression':
@@ -103,8 +108,18 @@ def ml_selector(df):
 
         return model, X_train, X_test, result, result_train
 
-    def predict_clustering(X, y, seed, chosen_classifier):
-        st.subheader("En progreso")
+    def predict_clustering(X, seed, chosen_classifier, parameter):
+        #https://github.com/thuwarakeshm/Streamlit-Intro/blob/main/quickstart.py
+        if chosen_classifier == 'K-means':
+            alg = KMeans(parameter, random_state=seed)
+            model = alg.fit(X)
+            wcss = []
+            for i in range(1, 10):
+                kmeans = KMeans(n_clusters = i, init = "k-means++", max_iter = 500, n_init = 10, random_state = seed)
+                kmeans.fit(X)
+                wcss.append(kmeans.inertia_)
+
+        return model, wcss
 
     def get_metrics(type, result, result_train):
         st.subheader("Métricas")
@@ -121,28 +136,69 @@ def ml_selector(df):
             return st.markdown('#### Precisión de Entrenamiento: ' + str(round(error_metrics['Accuracy_train'], 3)) +
             ' -- Precisión de Test: ' + str(round(error_metrics['Accuracy_test'], 3)))
     
-    def plot_metrics(model, X_test, X_train, result, result_train, type):
+    def plot_confusion_matrix(model, X_test, X_train, result, result_train):
         col1, col2 = st.columns(2)
-        if type == 'Clasificación':
-            display = ConfusionMatrixDisplay.from_estimator(
-                model,
-                X_train,
-                result_train.Actual_Train,
-                cmap=plot.cm.Blues,
-                normalize=None,
-            )
-            display.ax_.set_title("Matriz de confusión en entrenamiento")
-            col1.pyplot()
+        display = ConfusionMatrixDisplay.from_estimator(
+            model,
+            X_train,
+            result_train.Actual_Train,
+            cmap=plt.cm.Blues,
+            normalize=None,
+        )
+        display.ax_.set_title("Matriz de confusión en entrenamiento")
+        col1.pyplot()
 
-            display = ConfusionMatrixDisplay.from_estimator(
-                model,
-                X_test,
-                result.Actual,
-                cmap=plot.cm.Blues,
-                normalize=None,
-            )
-            display.ax_.set_title("Matriz de confusión en test")
-            col2.pyplot()
+        display = ConfusionMatrixDisplay.from_estimator(
+            model,
+            X_test,
+            result.Actual,
+            cmap=plt.cm.Blues,
+            normalize=None,
+        )
+        display.ax_.set_title("Matriz de confusión en test")
+        col2.pyplot()
+
+    def plot_regresion(model, df, chosen_classifier):
+        
+        if chosen_classifier == 'Random Forest':
+            tree = st.number_input('Select tree', min_value=1, max_value=len(model.estimators_), value=1, step=1)
+            fig = plt.figure(figsize=(15, 10))
+            plot_tree(model.estimators_[tree-1], 
+                    feature_names=df.columns,
+                    filled=True, impurity=True, 
+                    rounded=True)
+            st.pyplot()
+
+        elif chosen_classifier=='Linear Regression':
+            st.markdown('#### Ecuación obtenida: ' + str(model.coef_) +
+            'x + ' + str(model.intercept_))
+            if len(df.columns) == 2:
+                plot = px.scatter(data_frame=df, x=df.columns[0], y=df.columns[1], 
+                    trendline="ols", trendline_color_override='darkblue')
+                st.subheader("Recta de regresión")
+                st.plotly_chart(plot)
+
+    def plot_cluster(model, X, wcss):
+        st.subheader("Centroides")
+        centroids = pd.DataFrame(model.cluster_centers_, columns = X.columns)
+        st.table(centroids)
+
+        fig = go.Figure(data = go.Scatter(x = [1,2,3,4,5,6,7,8,9,10], y = wcss))
+        fig.update_layout(title='WCSS vs. Número de clusters',
+                        xaxis_title='Clusters',
+                        yaxis_title='WCSS')
+        st.plotly_chart(fig)
+
+        if len(X.columns) == 2:
+            X['Cluster'] = model.labels_
+            fig = px.scatter(X, x=X.columns[0], y=X.columns[1], color='Cluster')
+            st.plotly_chart(fig)
+
+        elif len(X.columns) == 3:
+            X['Cluster'] = model.labels_
+            fig = px.scatter_3d(X, x=X.columns[0], y=X.columns[1], z=X.columns[2],
+              color='Cluster', opacity = 0.8, size=X.columns[0], size_max=30)
+            st.plotly_chart(fig)
 
     
 
@@ -159,6 +215,13 @@ def ml_selector(df):
         model_btn = st.sidebar.button('Crear modelo')  
 
     if len(features) > 1 and model_btn:
-        model, X_train, X_test, result, result_train = predict_classification(X, y, seed, type, chosen_classifier, parameter)
-        get_metrics(type, result, result_train)
-        plot_metrics(model, X_test, X_train, result, result_train, type)
+        if type == "Clustering":
+            model, wcss = predict_clustering(X, seed, chosen_classifier, parameter)
+            plot_cluster(model, X, wcss)
+        else:
+            model, X_train, X_test, result, result_train = predict_classification(X, y, seed, type, chosen_classifier, parameter)
+            get_metrics(type, result, result_train)
+            if type == 'Clasificación':
+                plot_confusion_matrix(model, X_test, X_train, result, result_train)
+            elif type == 'Regresión':
+                plot_regresion(model, df[features], chosen_classifier)
