@@ -24,12 +24,10 @@ def aplicar_agrupamiento(X, seed, parameters):
     
     # Agrupamiento basado en prototipos - K-means
     st.markdown("___")
-    st.markdown("#### "+"K-means")
+    st.markdown("#### K-means")
 
     alg = KMeans(n_clusters=parameters['nClusters'], random_state=seed, init = "k-means++", max_iter = 500, n_init = 10)
     model = alg.fit(X)
-    labels = model.labels_
-    st.markdown("Coeficiente de silueta: %0.3f" % metrics.silhouette_score(X, labels))
 
     st.markdown("##### Centroides")
     centroids = pd.DataFrame(model.cluster_centers_, columns = X.columns)
@@ -73,7 +71,7 @@ def aplicar_agrupamiento(X, seed, parameters):
     dist_methods.append("ward")
 
     st.markdown("___")
-    st.markdown("#### "+"Jeráquico")
+    st.markdown("#### Jeráquico")
 
     plt.title("Dendrograma")
     dist_matrix = linkage(X_scaled, method=parameters['dist'])
@@ -99,13 +97,13 @@ def aplicar_agrupamiento(X, seed, parameters):
     model = alg.fit_predict(X_scaled)
     st.markdown("##### Centroides")
     clf = NearestCentroid()
-    clf.fit(X, model)
+    clf.fit(X_scaled, model)
     st.table(centroids)
 
     ###############
     # Agrupamiento basado en desidad
     st.markdown("___")
-    st.markdown("#### "+"DBScan")
+    st.markdown("#### DBScan")
 
     alg = DBSCAN(eps=parameters['eps'], min_samples=parameters['minPts'])
     model = alg.fit(X)
@@ -115,12 +113,14 @@ def aplicar_agrupamiento(X, seed, parameters):
     # Number of clusters in labels, ignoring noise if present.
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
     n_noise_ = list(labels).count(-1)
+    cluster_counter = Counter(labels)
 
     st.markdown("Número de clusters estimados: %d" % n_clusters_)
     st.markdown("Puntos estimados como ruido: %d" % n_noise_)
-    st.markdown("Coeficiente de silueta: %0.3f" % metrics.silhouette_score(X, labels))
+    if len(cluster_counter) > 1:
+        st.markdown("Coeficiente de silueta: %0.3f" % metrics.silhouette_score(X, labels))
     st.markdown("Clusters:")
-    cluster_counter = Counter(labels)
+
     for key in cluster_counter.keys():
         st.markdown("- **Cluster " + str(key) + "**: " +  str(cluster_counter[key]) + " elementos")
 
@@ -136,14 +136,9 @@ def aplicar_agrupamiento(X, seed, parameters):
         fig = px.scatter_3d(X, x=X.columns[0], y=X.columns[1], z=X.columns[2],
             color='Cluster', opacity = 0.8, size=X.columns[0], size_max=30)
         st.plotly_chart(fig)
-    
-    st.markdown("##### Centroides")
-    model = alg.fit_predict(X)
-    clf.fit(X, model)
-    st.table(centroids)
 
     if parameters['knnDist']:
-        st.markdown("##### Distancia entre k vecinos más cercanos")
+        st.markdown("##### Distancia entre " + str(parameters['minPts']) +" vecinos más cercanos")
         neigh = NearestNeighbors(n_neighbors=parameters['minPts'])
         nbrs = neigh.fit(X)
         distances, indices = nbrs.kneighbors(X)
