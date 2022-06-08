@@ -59,6 +59,12 @@ def aplicar_clasificacion(X, y, seed, parameters):
                 fontsize=9)
         st.pyplot()
 
+    if parameters['maxDepth_dt'] == 0:
+        parameters['maxDepth_dt'] = None
+
+    if parameters['maxDepth_rfc'] == 0:
+        parameters['maxDepth_rfc'] = None
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
 
     numeric_features, categorical_features = get_columns_types(X_train)

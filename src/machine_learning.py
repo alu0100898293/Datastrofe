@@ -52,16 +52,16 @@ def ml_selector(df):
             parameters['maxIt'] = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
             st.sidebar.subheader("Random Forest")
             parameters['trees'] = st.sidebar.slider('Número de árboles', 1, 1000, 10)
-            parameters['maxDepth_rfr'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='rfr')
+            parameters['maxDepth_rfr'] = st.sidebar.slider('Profundidad máxima del árbol', 0, 100, 10, key='rfr')
 
         elif type == "Clasificación":
             st.sidebar.subheader("Regresión Logística")
             parameters['maxIt'] = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
             st.sidebar.subheader("Árbol de decisión")
-            parameters['maxDepth_dt'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='dtc')
+            parameters['maxDepth_dt'] = st.sidebar.slider('Profundidad máxima del árbol', 0, 100, 10, key='dtc')
             st.sidebar.subheader("Random Forest")
             parameters['trees'] = st.sidebar.slider('Número de árboles', 1, 1000, 10)
-            parameters['maxDepth_rfc'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='rfc')
+            parameters['maxDepth_rfc'] = st.sidebar.slider('Profundidad máxima del árbol', 0, 100, 10, key='rfc')
 
 
 

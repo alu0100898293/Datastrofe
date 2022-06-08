@@ -46,6 +46,9 @@ def aplicar_regresion(X, y, seed, parameters):
                 fontsize=9)
         st.pyplot()
 
+    if parameters['maxDepth_rfr'] == 0:
+        parameters['maxDepth_rfr'] = None
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
 
     numeric_features, categorical_features = get_columns_types(X_train)
