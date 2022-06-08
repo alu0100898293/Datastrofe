@@ -22,7 +22,6 @@ def vistas(link):
                     "nuestro entorno gracias a sus mecánicas de visualización y aprendizaje "
                     "automático. Emplea las vistas del menú lateral para empezar. ")
 
-        st.subheader("Datasets recomendado")
         st.markdown("A modo de recomendación, puedes descargar el Dataset de _Star Classification_ en el "
                     "siguiente [enlace](https://drive.google.com/file/d/1jQHUQAZc002zDfbQXtD-X9VHdJ5cNbpo/view?usp=sharing)")
 
@@ -94,6 +93,10 @@ def vistas(link):
 
             if link == 'Machine Learning':
                 st.subheader("Bienvenido al entorno de Machine Learning")
+                st.markdown("Se encuntran disponibles tres tipos de aprendizaje automático con los siguientes algoritmos:")
+                st.markdown("- **Clasificación**: regresión logística, SVC, naive bayes, árbol de decisión y random forest.")
+                st.markdown("- **Regresión**: regresión lineal, random forest.")
+                st.markdown("- **Agrupamiento**: k-means(prototipos), jerárquico y dbscan(densisad)")
                 ml_selector(df)
 
                 

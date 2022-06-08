@@ -4,6 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
+from src.clasificacion import aplicar_clasificacion
+from src.regresion import aplicar_regresion
+from src.agrupamiento import aplicar_agrupamiento
 
 ##sklearn
 from sklearn.linear_model import LogisticRegression
@@ -41,33 +44,57 @@ def ml_selector(df):
     
     # Classifier type and algorithm selection 
     def set_model():
-        type = st.sidebar.selectbox("Tipo de algoritmo", ("Clasificación", "Regresión", "Clustering"))
-        parameter=None
+        type = st.sidebar.selectbox("Tipo de algoritmo", ("Clasificación", "Regresión", "Agrupamiento"))
+        parameters={}
+        chosen_classifier = None
         if type == "Regresión":
-            chosen_classifier = st.sidebar.selectbox("Escoja un clasificador", ('Random Forest', 'Linear Regression')) 
-            if chosen_classifier == 'Random Forest': 
-                parameter = st.sidebar.slider('Número de aŕboles', 1, 1000, 1)
-        elif type == "Clasificación":
-            chosen_classifier = st.sidebar.selectbox("Escoja un clasificador", ('Logistic Regression', 'Naive Bayes')) 
-            if chosen_classifier == 'Logistic Regression': 
-                parameter = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
-        
-        elif type == "Clustering":
-            chosen_classifier = st.sidebar.selectbox("Escoja un clasificador", ('K-means', 'K-means'))
-            if chosen_classifier == 'K-means': 
-                parameter = st.sidebar.slider('Número de clusters', 2, 10, 3)
-            pass
-        
-        return type, chosen_classifier, parameter
+            st.sidebar.subheader("Regresión de Soporte Vectorial")
+            parameters['maxIt'] = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
+            st.sidebar.subheader("Random Forest")
+            parameters['trees'] = st.sidebar.slider('Número de árboles', 1, 1000, 10)
+            parameters['maxDepth_rfr'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='rfr')
 
-    def predict_classification(X, y, seed, type, chosen_classifier, parameter): 
+        elif type == "Clasificación":
+            st.sidebar.subheader("Regresión Logística")
+            parameters['maxIt'] = st.sidebar.slider('Máximo de iteraciones', 1, 100, 10)
+            st.sidebar.subheader("Árbol de decisión")
+            parameters['maxDepth_dt'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='dtc')
+            st.sidebar.subheader("Random Forest")
+            parameters['trees'] = st.sidebar.slider('Número de árboles', 1, 1000, 10)
+            parameters['maxDepth_rfc'] = st.sidebar.slider('Profundidad máxima del árbol', 1, 100, 10, key='rfc')
+
+
+
+        elif type == "Agrupamiento":
+            st.sidebar.subheader("K-means") 
+            parameters['nClusters'] = st.sidebar.slider('Número de clusters', 2, 10, 3, key='hierarchical')
+            parameters['wcss'] = st.sidebar.checkbox(label='Mostrar curva wcss')
+
+            st.sidebar.subheader("Jerárquico")
+            parameters['nClusters_h'] = st.sidebar.slider('Número de clusters', 2, 10, 3) 
+            parameters['dist'] = st.sidebar.selectbox(label="Método de distancia",
+                                                    options=['single', 'complete',
+                                                                'average',
+                                                                'ward'])
+            parameters['compDist'] = st.sidebar.checkbox(label='Comparar métodos de distancia')                                                    
+
+            st.sidebar.subheader("DBScan")
+            parameters['eps'] = st.sidebar.slider('Valor de epsilon', 0.0, 30.0, 1.0)
+            parameters['minPts'] = st.sidebar.slider('Min. de puntos cercanos', 1, 20, 3)
+            parameters['knnDist'] = st.sidebar.checkbox(label='Mostrar distancias entre k vecinos más cercanos')
+
+
+        
+        return type, chosen_classifier, parameters
+
+    def predict_classification(X, y, seed, type, chosen_classifier, parameters): 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
         predictions = None
         predictions_train = None
 
         if type == "Regresión":    
             if chosen_classifier == 'Random Forest':
-                alg = RandomForestRegressor(max_depth=2, random_state=0, n_estimators=parameter)
+                alg = RandomForestRegressor(max_depth=2, random_state=0, n_estimators=parameters)
                 model = alg.fit(X_train, y_train)
                 predictions = alg.predict(X_test)
                 predictions_train = alg.predict(X_train)
@@ -83,7 +110,7 @@ def ml_selector(df):
 
         elif type == "Clasificación":
             if chosen_classifier == 'Logistic Regression':
-                alg = LogisticRegression(max_iter=parameter)
+                alg = LogisticRegression(max_iter=parameters)
                 model = alg.fit(X_train, y_train)
                 predictions = alg.predict(X_test)
                 predictions_train = alg.predict(X_train)
@@ -108,10 +135,10 @@ def ml_selector(df):
 
         return model, X_train, X_test, result, result_train
 
-    def predict_clustering(X, seed, chosen_classifier, parameter):
+    def predict_Agrupamiento(X, seed, chosen_classifier, parameters):
         #https://github.com/thuwarakeshm/Streamlit-Intro/blob/main/quickstart.py
         if chosen_classifier == 'K-means':
-            alg = KMeans(parameter, random_state=seed)
+            alg = KMeans(parameters, random_state=seed)
             model = alg.fit(X)
             wcss = []
             for i in range(1, 10):
@@ -206,22 +233,19 @@ def ml_selector(df):
     seed=st.sidebar.slider('Seed',1,200)
     features=set_features(df)
     if len(features) > 1:
-        type, chosen_classifier, parameter=set_model()
+        type, chosen_classifier, parameters=set_model()
 
-        if type == "Clustering":
+        if type == "Agrupamiento":
             X=df[features]
         else:
             X,y=prepare_data_with_target(df, features)
         model_btn = st.sidebar.button('Crear modelo')  
 
     if len(features) > 1 and model_btn:
-        if type == "Clustering":
-            model, wcss = predict_clustering(X, seed, chosen_classifier, parameter)
-            plot_cluster(model, X, wcss)
-        else:
-            model, X_train, X_test, result, result_train = predict_classification(X, y, seed, type, chosen_classifier, parameter)
-            get_metrics(type, result, result_train)
-            if type == 'Clasificación':
-                plot_confusion_matrix(model, X_test, X_train, result, result_train)
-            elif type == 'Regresión':
-                plot_regresion(model, df[features], chosen_classifier)
+        if type == "Clasificación":
+            aplicar_clasificacion(X, y, seed, parameters)
+            
+        elif type == "Agrupamiento":
+            aplicar_agrupamiento(X, seed, parameters)
+        elif type == 'Regresión':
+            aplicar_regresion(X, y, seed, parameters)

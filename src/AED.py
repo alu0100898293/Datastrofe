@@ -12,28 +12,28 @@ def analisis_exploratorio(df):
     except Exception as e:
         print(e)
         
-    st.sidebar.subheader("Parámetros de análisis")
+    st.subheader("Parámetros de análisis")
 
-    if st.sidebar.checkbox("Mostrar dimensionalidad (shape)"):
-        st.subheader("Dimensionalidad")
+    dim_expander = st.expander(label='Dimensionalidad (shape)')
+    with dim_expander:
         st.write(df.shape)
 
-    if st.sidebar.checkbox("Mostrar columnas"):
-        st.subheader("Columnas")
+    col_expander = st.expander(label='Columnas')
+    with col_expander:
         st.write(df.columns)
 
-    if st.sidebar.checkbox("Mostrar resumen"):
-        st.subheader("Resumen")
+    sum_expander = st.expander(label='Resumen')
+    with sum_expander:
         st.write(df.describe().T)
 
-    if st.sidebar.checkbox('Mostrar valores nulos'):
-        st.subheader("Valores nulos")
+    null_expander = st.expander(label='Valores nulos')
+    with null_expander:
         st.write(df.isnull().sum())
 
-    if st.sidebar.checkbox("Mostrar tipos de datos"):
-        st.subheader("Tipos de datos")
-        st.write(df.dtypes)
+    type_expander = st.expander(label='Tipos de datos')
+    with type_expander:
+        st.write(df.dtypes.astype(str))
 
-    if st.sidebar.checkbox('Mostrar correlación de los datos'):
-        st.subheader("Correlación de los datos")
+    corr_expander = st.expander(label='Correlación de los datos')
+    with corr_expander:
         st.write(df.corr())
