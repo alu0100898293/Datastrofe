@@ -1,6 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import graphviz as graphviz
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import ConfusionMatrixDisplay

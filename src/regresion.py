@@ -9,8 +9,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor, plot_tree
 from sklearn.pipeline import Pipeline
-from sklearn.svm import  SVR
-from sklearn.linear_model import BayesianRidge, LinearRegression, LogisticRegression
+from sklearn.svm import LinearSVR
+from sklearn.linear_model import BayesianRidge, LinearRegression
 
 def aplicar_regresion(X, y, seed, parameters):
     """
@@ -73,7 +73,7 @@ def aplicar_regresion(X, y, seed, parameters):
 
     rgrs = []
     rgrs.append(LinearRegression())
-    rgrs.append(SVR(max_iter=parameters['maxIt']))
+    rgrs.append(LinearSVR(max_iter=parameters['maxIt']))
     rgrs.append(BayesianRidge())
     rgrs.append(DecisionTreeRegressor(max_depth=4))
     rgrs.append(RandomForestRegressor(random_state=seed, n_estimators=parameters['trees'], max_depth=parameters['maxDepth_rfr']))
