@@ -3,7 +3,7 @@ from src.maquetado import vistas
 
 
 # change max message size which can be sent via websocket
-st.server.server_util.MESSAGE_SIZE_LIMIT = 300 * 1e6
+# st.server.server_util.MESSAGE_SIZE_LIMIT = 300 * 1e6
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
