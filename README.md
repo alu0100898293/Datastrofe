@@ -8,4 +8,5 @@
 
 ## Entorno desplegado
 Puede probar el entorno de forma online mediante Streamlit en el siguiente enlace:
-https://share.streamlit.io/alu0100898293/adm-visualizacion/main/app_visualizacion.py
+
+https://datastrofe.streamlit.app/
