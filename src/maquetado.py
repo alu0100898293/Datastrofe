@@ -4,9 +4,7 @@ from src.control_graficos import control_graficos
 from src.carga_datos import load_dataframe
 from src.informe import mostrar_informe
 from src.machine_learning import ml_selector
-from streamlit.components.v1 import iframe
 from PIL import Image
-from pathlib import Path
 
 def vistas(link):
     """
@@ -14,7 +12,7 @@ def vistas(link):
     :param link: str, opción seleccionada en el radio button
     :return:
     """
-    image = Image.open('logo.png')
+    image = Image.open('imgs/logo.png')
     st.image(image)
     if link == 'Inicio':
         st.header('Bienvenidos al maravilloso mundo del anáilisis de datos')
@@ -28,7 +26,7 @@ def vistas(link):
         st.header('Referencias')
         st.write("Este entorno está basado en el proyecto Open Source OpenCharts.")
         st.markdown('#### Repositorio de la aplicación')
-        st.markdown("El código de esta aplicación puede consultarse en el repositorio: https://github.com/alu0100898293/ADM-Visualizacion")
+        st.markdown("El código de esta aplicación puede consultarse en el repositorio: https://github.com/alu0100898293/Datastrofe")
         st.markdown('#### Tutorial de desarrollo')
         st.markdown("Para el desarrollo de este entorno se han llevado a cabo las indicaciones marcadas por los vídeos del usuario de Youtube" 
             "The Fullstack Ninja en la colección: https://www.youtube.com/playlist?list=PLgf5tk2HvlhONM16aLWjhdJPxRptglWdW")

@@ -1,27 +1,10 @@
 from numpy.core.numeric import True_
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.graph_objects as go
+
 from src.clasificacion import aplicar_clasificacion
 from src.regresion import aplicar_regresion
 from src.agrupamiento import aplicar_agrupamiento
 
-##sklearn
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
-from sklearn.metrics import ConfusionMatrixDisplay
-from sklearn.metrics import precision_score, recall_score
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, accuracy_score
-from sklearn.cluster import KMeans
-from sklearn.tree import plot_tree
 
 def ml_selector(df):
 

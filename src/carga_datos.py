@@ -1,8 +1,7 @@
 import pandas as pd
 import streamlit as st
-from sklearn.model_selection import train_test_split
 
-@st.cache
+@st.cache_data
 def load_dataframe(uploaded_file, clean_data):
     try:
         df = pd.read_csv(uploaded_file)

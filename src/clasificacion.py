@@ -6,7 +6,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree, export_graphviz
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import GaussianNB
@@ -102,23 +102,28 @@ def aplicar_clasificacion(X, y, seed, parameters):
         st.markdown("___")
         st.markdown("#### "+classifier.__class__.__name__)
 
-        pipeline.set_params(clf = classifier)
+        try:
 
-        pipeline.fit(X_train, y_train)
+            pipeline.set_params(clf = classifier)
 
-        col1, col2 = st.columns(2)
-        col1.markdown("**Precisión en entrenamiento**: "+ str(round(pipeline.score(X_train, y_train), 3)))
-        col2.markdown("**Precisión en test**: "+ str(round(pipeline.score(X_test, y_test), 3)))
+            pipeline.fit(X_train, y_train)
 
-        plot_matrix(pipeline, X_train, y_train, 'entrenamiento', col1)
+            col1, col2 = st.columns(2)
+            col1.markdown("**Precisión en entrenamiento**: "+ str(round(pipeline.score(X_train, y_train), 3)))
+            col2.markdown("**Precisión en test**: "+ str(round(pipeline.score(X_test, y_test), 3)))
 
-        plot_matrix(pipeline, X_test, y_test, 'test', col2)
+            plot_matrix(pipeline, X_train, y_train, 'entrenamiento', col1)
 
-        if(classifier.__class__.__name__ == "DecisionTreeClassifier"):
-            st.markdown("**Profundidad del árbol**: "+ str(pipeline['clf'].tree_.max_depth))
-            plot_tree_from_pipeline(pipeline['clf'], X.columns, list(set(y)))
+            plot_matrix(pipeline, X_test, y_test, 'test', col2)
+
+            if(classifier.__class__.__name__ == "DecisionTreeClassifier"):
+                st.markdown("**Profundidad del árbol**: "+ str(pipeline['clf'].tree_.max_depth))
+                plot_tree_from_pipeline(pipeline['clf'], X.columns, list(set(y)))
 
 
-        if(classifier.__class__.__name__ == "RandomForestClassifier"):
-            n_tree = st.number_input('Seleccione el árbol a mostrar', min_value=1, max_value=len(pipeline['clf'].estimators_), value=1, step=1)
-            plot_tree_from_pipeline(pipeline['clf'].estimators_[n_tree-1], X.columns, list(set(y)))
+            if(classifier.__class__.__name__ == "RandomForestClassifier"):
+                n_tree = st.number_input('Seleccione el árbol a mostrar', min_value=1, max_value=len(pipeline['clf'].estimators_), value=1, step=1)
+                plot_tree_from_pipeline(pipeline['clf'].estimators_[n_tree-1], X.columns, list(set(y)))
+
+        except Exception as e:
+            st.error("Se produjo el siguiente error al crear el modelo:"+e)

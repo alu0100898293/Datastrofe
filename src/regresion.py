@@ -86,32 +86,36 @@ def aplicar_regresion(X, y, seed, parameters):
         st.markdown("___")
         st.markdown("#### "+regressor.__class__.__name__)
 
-        pipeline.set_params(rgr = regressor)
+        try:
+            pipeline.set_params(rgr = regressor)
 
-        pipeline.fit(X_train, y_train)
-        pred_train = pipeline.predict(X_train)
-        pred_test = pipeline.predict(X_test)
+            pipeline.fit(X_train, y_train)
+            pred_train = pipeline.predict(X_train)
+            pred_test = pipeline.predict(X_test)
 
-        col1, col2 = st.columns(2)
-        col1.markdown("**Precisión en entrenamiento**: "+ str(round(pipeline.score(X_train, y_train), 3)))
-        col2.markdown("**Precisión en test**: "+ str(round(pipeline.score(X_test, y_test), 3)))
+            col1, col2 = st.columns(2)
+            col1.markdown("**Precisión en entrenamiento**: "+ str(round(pipeline.score(X_train, y_train), 3)))
+            col2.markdown("**Precisión en test**: "+ str(round(pipeline.score(X_test, y_test), 3)))
 
-        error_metrics = {}
-        error_metrics['MSE_test'] = mean_squared_error(y_train, pred_train)
-        error_metrics['MSE_train'] = mean_squared_error(y_test, pred_test)
-        col1.markdown("**MSE en entrenamiento**: "+ str(round(error_metrics['MSE_train'], 3)))
-        col2.markdown("**MSE en test**: "+ str(round(error_metrics['MSE_test'], 3)))
-        
-        if(regressor.__class__.__name__ == "LinearRegression"):
-            st.markdown('**Ecuación obtenida**: ' + str(pipeline['rgr'].coef_) +
-                'x + ' + str(pipeline['rgr'].intercept_))
-        
-        fig, ax = plt.subplots()
-        ax.scatter(pred_test, y_test, edgecolors=(0, 0, 1))
-        ax.plot([y_test.min(), y_test.max()], [pred_test.min(), pred_test.max()], 'r--', lw=3)
-        ax.set_xlabel('Predicted')
-        ax.set_ylabel('Actual')
-        st.pyplot()
+            error_metrics = {}
+            error_metrics['MSE_test'] = mean_squared_error(y_train, pred_train)
+            error_metrics['MSE_train'] = mean_squared_error(y_test, pred_test)
+            col1.markdown("**MSE en entrenamiento**: "+ str(round(error_metrics['MSE_train'], 3)))
+            col2.markdown("**MSE en test**: "+ str(round(error_metrics['MSE_test'], 3)))
+            
+            if(regressor.__class__.__name__ == "LinearRegression"):
+                st.markdown('**Ecuación obtenida**: ' + str(pipeline['rgr'].coef_) +
+                    'x + ' + str(pipeline['rgr'].intercept_))
+            
+            fig, ax = plt.subplots()
+            ax.scatter(pred_test, y_test, edgecolors=(0, 0, 1))
+            ax.plot([y_test.min(), y_test.max()], [pred_test.min(), pred_test.max()], 'r--', lw=3)
+            ax.set_xlabel('Predicted')
+            ax.set_ylabel('Actual')
+            st.pyplot()
 
-        if(regressor.__class__.__name__ == "DecisionTreeRegressor"):
-            plot_tree_from_pipeline(pipeline['rgr'], X_train.columns, list(set(y)))
+            if(regressor.__class__.__name__ == "DecisionTreeRegressor"):
+                plot_tree_from_pipeline(pipeline['rgr'], X_train.columns, list(set(y)))
+                
+        except Exception as e:
+            st.error("Se produjo el siguiente error al crear el modelo:"+e)

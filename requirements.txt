@@ -5,7 +5,7 @@ kaleido
 psutil
 pandas
 openpyxl>=3.0.9
-pandas-profiling
+ydata-profiling
 streamlit-pandas-profiling
 numpy
 scikit-learn

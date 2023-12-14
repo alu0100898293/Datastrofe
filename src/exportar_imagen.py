@@ -2,8 +2,7 @@ from base64 import b64encode
 import io
 import streamlit as st
 
-
-@st.cache
+@st.cache_data
 def descargar_grafica(plot, output_format):
     """
 
