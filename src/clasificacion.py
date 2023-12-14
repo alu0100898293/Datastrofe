@@ -126,4 +126,5 @@ def aplicar_clasificacion(X, y, seed, parameters):
                 plot_tree_from_pipeline(pipeline['clf'].estimators_[n_tree-1], X.columns, list(set(y)))
 
         except Exception as e:
-            st.error("Se produjo el siguiente error al crear el modelo:"+e)
+            st.error("Se produjo el siguiente error al crear el modelo:")
+            st.error(e)

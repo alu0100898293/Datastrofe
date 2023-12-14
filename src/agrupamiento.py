@@ -61,7 +61,8 @@ def aplicar_agrupamiento(X, seed, parameters):
             st.plotly_chart(fig)
 
     except Exception as e:
-            st.error("Se produjo el siguiente error al crear el modelo:"+e)
+            st.error("Se produjo el siguiente error al crear el modelo:")
+            st.error(e)
     
     ###############
     # Agrupamiento jerárquico
@@ -106,7 +107,8 @@ def aplicar_agrupamiento(X, seed, parameters):
         st.table(centroids)
 
     except Exception as e:
-        st.error("Se produjo el siguiente error al crear el modelo:"+e)    
+        st.error("Se produjo el siguiente error al crear el modelo:")    
+        st.error(e)
         
     ###############
     # Agrupamiento basado en desidad
@@ -158,7 +160,8 @@ def aplicar_agrupamiento(X, seed, parameters):
             st.pyplot()
         
     except Exception as e:
-            st.error("Se produjo el siguiente error al crear el modelo:"+e)
+            st.error("Se produjo el siguiente error al crear el modelo:")
+            st.error(e)
 
 
    

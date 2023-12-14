@@ -36,4 +36,8 @@ def analisis_exploratorio(df):
 
     corr_expander = st.expander(label='Correlación de los datos')
     with corr_expander:
-        st.write(df.corr())
+        try:
+            st.write(df.corr())
+        except Exception as e:
+            st.error("Se produjo el siguiente error al calcular la matriz de correlación:")    
+            st.error(e)

@@ -118,4 +118,5 @@ def aplicar_regresion(X, y, seed, parameters):
                 plot_tree_from_pipeline(pipeline['rgr'], X_train.columns, list(set(y)))
                 
         except Exception as e:
-            st.error("Se produjo el siguiente error al crear el modelo:"+e)
+            st.error("Se produjo el siguiente error al crear el modelo:")
+            st.error(e)
