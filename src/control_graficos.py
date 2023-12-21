@@ -176,6 +176,8 @@ def control_graficos(chart_type, df, dropdown_options, template):
     if chart_type == 'Mapa de calor':
         st.sidebar.subheader('Mapa de calor')
 
+        st.warning('El mapa de calor solo funciona para las columnas con valores numéricos.')
+
         try:
             import numpy as np
             # Filtrar columnas numéricas
@@ -187,9 +189,8 @@ def control_graficos(chart_type, df, dropdown_options, template):
                 selected_data = df[selected_columns]
                 correlation_matrix = selected_data.corr()
                 plot = px.imshow(correlation_matrix, 
-                                 template=template)
-            else:
-                st.warning('Por favor, selecciona al menos una columna para generar el mapa de calor.')
+                                 template=template, 
+                                 title=title)
 
         except Exception as e:
             print(e)
