@@ -25,7 +25,7 @@ def control_graficos(chart_type, df, dropdown_options, template):
             x_values = st.sidebar.selectbox('Eje X', index=length_of_options,options=dropdown_options)
             y_values = st.sidebar.selectbox('Eje Y',index=length_of_options, options=dropdown_options)
             color_value = st.sidebar.selectbox("Color", index=length_of_options,options=dropdown_options)
-            symbol_value = st.sidebar.selectbox("Símbolo",index=length_of_options, options=dropdown_options)
+            symbol_value = st.sidebar.selectbox("Forma del punto",index=length_of_options, options=dropdown_options)
             marginaly = st.sidebar.selectbox("Gráfico marginal", index=0,options=[ None, 'box',
                                                                          'violin', 'histogram'])
             #log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
@@ -183,14 +183,18 @@ def control_graficos(chart_type, df, dropdown_options, template):
             # Filtrar columnas numéricas
             numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
             selected_columns = st.sidebar.multiselect('Selecciona las columnas para el mapa de calor', options=numeric_columns)
+            abs_value = st.sidebar.checkbox(label='Mapa en valor absoluto')
             title = st.sidebar.text_input(label='Título del mapa de calor')
 
             if selected_columns:
                 selected_data = df[selected_columns]
                 correlation_matrix = selected_data.corr()
-                plot = px.imshow(correlation_matrix, 
+                plot = px.imshow(abs(correlation_matrix) if abs_value else correlation_matrix, 
                                  template=template, 
-                                 title=title)
+                                 title=title,
+                                 zmin=0 if abs_value else -1,  # Límite inferior de la escala
+                                 zmax=1    # Límite superior de la escala
+                                )
 
         except Exception as e:
             print(e)
