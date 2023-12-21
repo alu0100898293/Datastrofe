@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 from src.exportar_imagen import mostrar_formato_exportacion
 
 
@@ -27,15 +28,16 @@ def control_graficos(chart_type, df, dropdown_options, template):
             symbol_value = st.sidebar.selectbox("Símbolo",index=length_of_options, options=dropdown_options)
             marginaly = st.sidebar.selectbox("Gráfico marginal", index=0,options=[ None, 'box',
                                                                          'violin', 'histogram'])
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
+            #log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            #log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             title = st.sidebar.text_input(label='Título de gráfico')
             plot = px.scatter(data_frame=df,
                               x=x_values,
                               y=y_values,
                               color=color_value,
                               symbol=symbol_value,
-                              marginal_y=marginaly, log_x=log_x, log_y=log_y,
+                              marginal_y=marginaly, 
+                              #log_x=log_x, log_y=log_y,
                               template=template, title=title)
 
         except Exception as e:
@@ -88,16 +90,16 @@ def control_graficos(chart_type, df, dropdown_options, template):
             color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
             #line_group = st.sidebar.selectbox("Line group", options=dropdown_options)
             #line_dash = st.sidebar.selectbox("Line dash", index=length_of_options,options=dropdown_options)
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
+            #log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            #log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.line(data_frame=df,
                            #line_group=line_group,
                            #line_dash=line_dash,
                            x=x_values,y=y_values,
                            color=color_value,
-                           log_x=log_x,
-                           log_y=log_y,
+                           #log_x=log_x,
+                           #log_y=log_y,
                            template=template,
                            title=title)
         except Exception as e:
@@ -135,13 +137,13 @@ def control_graficos(chart_type, df, dropdown_options, template):
             violinmode = st.sidebar.selectbox('Modo de violín', options=['group', 'overlay'])
             box = st.sidebar.selectbox("Mostrar caja", options=[False, True])
             outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
+            #log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            #log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.violin(data_frame=df,x=x_values,
                              y=y_values,color=color_value,
                              box=box,
-                             log_x=log_x, log_y=log_y,
+                             #log_x=log_x, log_y=log_y,
                              violinmode=violinmode,points=outliers,
                              template=template, title=title)
     
@@ -157,18 +159,41 @@ def control_graficos(chart_type, df, dropdown_options, template):
             color_value = st.sidebar.selectbox("Color", index=length_of_options, options=dropdown_options)
             boxmode = st.sidebar.selectbox('Modo de caja', options=['group', 'overlay'])
             outliers = st.sidebar.selectbox('Mostrar puntos', options=[False, 'all', 'outliers', 'suspectedoutliers'])
-            log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
-            log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
+            #log_x = st.sidebar.selectbox('Escala log. en x', options=[False, True])
+            #log_y = st.sidebar.selectbox('Escala log. en y', options=[False, True])
             notched = st.sidebar.selectbox('Mostrar muescas', options=[False, True])
             title = st.sidebar.text_input(label='Título del gráfico')
             plot = px.box(data_frame=df, x=x_values,
                           y=y_values, color=color_value,
                           notched=notched,
-                          log_x=log_x, log_y=log_y, boxmode=boxmode, points=outliers,
+                          #log_x=log_x, log_y=log_y, 
+                          boxmode=boxmode, points=outliers,
                           template=template, title=title)
     
         except Exception as e:
             print(e)
+
+    if chart_type == 'Mapa de calor':
+        st.sidebar.subheader('Mapa de calor')
+
+        try:
+            import numpy as np
+            # Filtrar columnas numéricas
+            numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
+            selected_columns = st.sidebar.multiselect('Selecciona las columnas para el mapa de calor', options=numeric_columns)
+            title = st.sidebar.text_input(label='Título del mapa de calor')
+
+            if selected_columns:
+                selected_data = df[selected_columns]
+                correlation_matrix = selected_data.corr()
+                plot = px.imshow(correlation_matrix, 
+                                 template=template)
+            else:
+                st.warning('Por favor, selecciona al menos una columna para generar el mapa de calor.')
+
+        except Exception as e:
+            print(e)
+
 
     st.subheader("Gráfico")
     st.plotly_chart(plot)
