@@ -9,4 +9,4 @@
 ## Entorno desplegado
 Puede probar el entorno de forma online mediante Streamlit en el siguiente enlace:
 
-https://datastrofe.streamlit.app/
+https://datastrofe-old.streamlit.app/
